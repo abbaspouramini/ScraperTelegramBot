@@ -78,7 +78,7 @@ def reply(update:Update,context:CallbackContext):
 
 
 
-
+#set updaters
 updater.dispatcher.add_handler(CommandHandler('start',start))
 updater.dispatcher.add_handler(MessageHandler(Filters.text,reply))
 
