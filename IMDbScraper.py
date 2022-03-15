@@ -10,8 +10,10 @@ class IMDbScraper:
         self.Data = {}
         self.Datas=[]
         self.name=name
+
         self.imdburl="https://www.imdb.com/"
         self.Searchs = self.search(name)
+
         # Download page
         if len(self.Searchs)>0:
             self.urls=self.generate_url()
@@ -47,15 +49,16 @@ class IMDbScraper:
         # method for downloading the  page
         for i in self.urls:
             self.page=requests.get(i).text
-            self.scrape_data()
-            self.scrape_image()
-            self.scrape_trailer_link()
-            data = self.Data.copy()
-            self.Datas.append({'caption': self.tostring(), 'imageurl': data['imageurl']})
+            result=self.scrape_data()
+            if result==1:
+                self.scrape_image()
+                self.scrape_trailer_link()
+                data = self.Data.copy()
+                self.Datas.append({'caption': self.tostring(), 'imageurl': data['imageurl'],'title':data['title'],'product year':data['product year']})
 
     def scrape_trailer_link(self):
         soup = BeautifulSoup(self.page, "html.parser")
-        video = soup.find("a", attrs={"class": "ipc-lockup-overlay Slatestyles__SlateOverlay-sc-1t1hgxj-2 fAkXoJ hero-media__slate-overlay ipc-focusable"})
+        video = soup.find("a", attrs={"class": "ipc-lockup-overlay sc-5ea2f380-2 gdvnDB hero-media__slate-overlay ipc-focusable"})
         if video==None:
             self.Data["videourl"] = None
         else:
@@ -76,46 +79,39 @@ class IMDbScraper:
         #method for scraping out movie title and description
 
         soup = BeautifulSoup(self.page, "html.parser")
+        movie_description = soup.find("span", {"data-testid": "plot-xs_to_m"})
         movie_title = soup.find("h1", {"data-testid": "hero-title-block__title"})
-        movie_productyear=soup.find("span",{"class":"TitleBlockMetaData__ListItemText-sc-12ein40-2 jedhex"})
         movie_director=soup.find("a",{"class":"ipc-metadata-list-item__list-content-item ipc-metadata-list-item__list-content-item--link"})
-        movie_description = soup.find("span", {"data-testid": "plot-xl"})
-        movie_rate=soup.find("span",{"class":"AggregateRatingButton__RatingScore-sc-1ll29m0-1 iTLWoV"})
+        movie_rate=soup.find("span",{"class":"sc-7ab21ed2-1 jGRxWM"})
+        total_ratingamount=soup.find("div",{"class":"sc-7ab21ed2-3 dPVcnq"})
+        movie_productyear=soup.find("span",{"class":"sc-52284603-2 iTRONr"})
 
 
-        total_ratingamount=soup.find("div",{"class":"AggregateRatingButton__TotalRatingAmount-sc-1ll29m0-3 jkCVKJ"})
 
-        self.Data["title"]=movie_title.text
-        self.Data["product year"]=movie_productyear.text
-        self.Data["description"]=movie_description.text
 
-        if movie_director!=None:
-           self.Data["director"]=movie_director.text
-        else:
-           self.Data["director"] =None
 
-        if movie_rate!=None:
-           self.Data["rate"]=movie_rate.text
-        else:
-           self.Data["rate"] =None
-
-        if movie_rate != None:
-           self.Data["total rating"]=total_ratingamount.text
-        else:
-            self.Data["rate"] = None
+        try:
+            self.Data["title"]=movie_title.text
+            self.Data["product year"]=movie_productyear.text
+            self.Data["description"]=movie_description.text
+            self.Data["director"]=movie_director.text
+            self.Data["rate"]=movie_rate.text
+            self.Data["total rating"]=total_ratingamount.text
+            return 1
+        except:
+            return 0
 
     def ResultOfSearch(self):
         Result = []
-        for i in range(0, 6):
-            Result.append(f"{i + 1}.{self.Searchs[i].data['title']} : {self.Searchs[i].data['year']}")
+        j = 1
+        for i in self.Datas:
+            Result.append(f"{j}.{i['title']} : {i['product year']}")
+            j += 1
         return Result
 
     def tostring(self):
-        directortxt=''
-        if self.Data['director']!=None:
-            directortxt=f"Director:{self.Data['director']}"
 
-        text= f"{self.Data['title']} : {self.Data['product year']}\n\n{directortxt} \n\n{self.Data['description']}\n\nrate:{self.Data['rate'] if self.Data['rate']!=None else 'with out rate'}-->Amount of Rating:{self.Data['total rating'] if self.Data['total rating']!=None else '' }\n\n"
+        text= f"{self.Data['title']} : {self.Data['product year']}\n\nDirector:\n{self.Data['director']} \n\n{self.Data['description']}\n\nrate:{self.Data['rate']}-->Amount of Rating:{self.Data['total rating']}\n\n"
         if self.Data['videourl']!=None:
             text+=f"trailer link:\n{self.Data['videourl']}"
         return text
