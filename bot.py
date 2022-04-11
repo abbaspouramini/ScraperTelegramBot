@@ -9,7 +9,7 @@ from IMDbScraper import IMDbScraper
 import pandas as pd
 import  enum
 
-##
+
 class CurrentMode(enum):
     search=0
     select=1
