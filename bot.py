@@ -10,7 +10,7 @@ import pandas as pd
 import  enum
 
 
-class CurrentMode(enum):
+class CurrentMode(enum.Enum):
     search=0
     select=1
     any=2
