@@ -10,7 +10,7 @@ import pandas as pd
 import  enum
 
 
-class CurrentMode(enum):
+class CurrentMode(enum.Enum):
     search=0
     select=1
     any=2
@@ -58,7 +58,7 @@ class Bot():
 
     def start(self,update: Update, context: CallbackContext):
 
-        context.bot.send_message(chat_id=update.effective_chat.id,text="Hello\U0001F44B  \nWelcome to IMDb bot.\nThis bot helps you get the film's information that you want  .\nHelp Button helps you how to use", reply_markup=ReplyKeyboardMarkup(self.startbuttons,one_time_keyboard=False))
+        context.bot.send_message(chat_id=update.effective_chat.id,text="Hello\U0001F44B  \nWelcome to IMDb bot.\nThis bot helps you get the film's information that you want  .\nHelp Button helps you how to use", reply_markup=ReplyKeyboardMarkup(self.startbuttons,one_time_keyboard=True))
 
 
     def reply(self,update:Update,context:CallbackContext):
@@ -69,9 +69,9 @@ class Bot():
             context.bot.send_message(chat_id=update.effective_chat.id,text="Send film's name\U0001F600")
             self.Mode=CurrentMode.search
         elif user_input ==self.Contact_Us and self.Mode==CurrentMode.any:
-            context.bot.send_message(chat_id=update.effective_chat.id,text="\U00002709Mail:  abbas.pooramini.80@gmail.com\n\U0001F431GitHub:  www.github.com/abbaspouramini\n\U0001F517Linkedin:  www.linkedin.com/in/abbas-pouramini-b1b777211/",reply_markup=ReplyKeyboardMarkup(self.startbuttons, one_time_keyboard=False))
+            context.bot.send_message(chat_id=update.effective_chat.id,text="\U00002709Mail:  abbas.pooramini.80@gmail.com\n\U0001F431GitHub:  www.github.com/abbaspouramini\n\U0001F517Linkedin:  www.linkedin.com/in/abbas-pouramini-b1b777211/",reply_markup=ReplyKeyboardMarkup(self.startbuttons, one_time_keyboard=True))
         elif user_input ==self.Help and self.Mode==CurrentMode.any:
-            context.bot.send_message(chat_id=update.effective_chat.id,text="You can enter a film's title ;\nbot will show a number of films that close to title that you enter and you can select one of them to show it's detail for you.    ",reply_markup=ReplyKeyboardMarkup(self.startbuttons, one_time_keyboard=False))
+            context.bot.send_message(chat_id=update.effective_chat.id,text="You can enter a film's title ;\nbot will show a number of films that close to title that you enter and you can select one of them to show it's detail for you.    ",reply_markup=ReplyKeyboardMarkup(self.startbuttons, one_time_keyboard=True))
 
         #Scrapping
 
@@ -86,10 +86,10 @@ class Bot():
                 'caption':caption,
                 'imageurl':photo
             }
-            self.SaveHistory(update.effective_chat.id,Data_to_save)
+            #self.SaveHistory(update.effective_chat.id,Data_to_save)
             self.Datas.clear()
             self.Mode = CurrentMode.any
-            context.bot.send_photo(chat_id=update.effective_chat.id, caption=caption, photo=photo , reply_markup=ReplyKeyboardMarkup(self.startbuttons))
+            context.bot.send_photo(chat_id=update.effective_chat.id, caption=caption, photo=photo , reply_markup=ReplyKeyboardMarkup(self.startbuttons, one_time_keyboard=True))
 
         ## Find Film Information
         elif self.Mode==CurrentMode.search:
@@ -106,11 +106,11 @@ class Bot():
                 for i in Result:
                     text += i + "\n"
                 self.Mode = CurrentMode.select
-                context.bot.send_message(chat_id=update.effective_chat.id, text=text,reply_markup=ReplyKeyboardMarkup(buttons,one_time_keyboard=False))
+                context.bot.send_message(chat_id=update.effective_chat.id, text=text,reply_markup=ReplyKeyboardMarkup(buttons,one_time_keyboard=True))
 
             else:
                 self.Mode = CurrentMode.any
-                context.bot.send_message(chat_id=update.effective_chat.id, text="No results found. Please try again \U0001F62C	 ",reply_markup=ReplyKeyboardMarkup(self.startbuttons, one_time_keyboard=False))
+                context.bot.send_message(chat_id=update.effective_chat.id, text="No results found. Please try again \U0001F62C	 ",reply_markup=ReplyKeyboardMarkup(self.startbuttons, one_time_keyboard=True))
 
 
 
