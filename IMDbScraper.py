@@ -84,7 +84,7 @@ class IMDbScraper:
         movie_director=soup.find("a",{"class":"ipc-metadata-list-item__list-content-item ipc-metadata-list-item__list-content-item--link"})
         movie_rate=soup.find("span",{"class":"sc-7ab21ed2-1 jGRxWM"})
         total_ratingamount=soup.find("div",{"class":"sc-7ab21ed2-3 dPVcnq"})
-        movie_productyear=soup.find("span",{"class":"sc-52284603-2 iTRONr"})
+        movie_productyear=soup.find("span",{"class":"sc-8c396aa2-2 itZqyK"})
 
 
 
