@@ -25,7 +25,7 @@ class Bot():
         self.startbuttons = self.CreateButtons([self.SearchByFilmName, self.Help, self.Contact_Us])
 
         # Bot Token
-        updater = Updater(token="5273699514:AAFgv0M3bwU3vfle8Q5ForhdL8GldiKKniY")
+        self.updater = Updater(token="5273699514:AAFgv0M3bwU3vfle8Q5ForhdL8GldiKKniY")
 
     #Save Search History
     def SaveHistory(self,ID,datas):
