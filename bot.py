@@ -89,7 +89,7 @@ class Bot():
             #self.SaveHistory(update.effective_chat.id,Data_to_save)
             self.Datas.clear()
             self.Mode = CurrentMode.any
-            context.bot.send_photo(chat_id=update.effective_chat.id, caption=caption, photo=photo , reply_markup=ReplyKeyboardMarkup(self.startbuttons), one_time_keyboard=True)
+            context.bot.send_photo(chat_id=update.effective_chat.id, caption=caption, photo=photo , reply_markup=ReplyKeyboardMarkup(self.startbuttons, one_time_keyboard=True))
 
         ## Find Film Information
         elif self.Mode==CurrentMode.search:
