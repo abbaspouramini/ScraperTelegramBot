@@ -77,19 +77,23 @@ class Bot():
 
         ## Show Final Result
         elif self.Mode==CurrentMode.select:
-            number=int(user_input[0])-1
-            caption = self.Datas[number]['caption']
-            photo = self.Datas[number]["imageurl"]
-            Data_to_save={
-                'title':self.Datas[number]['title'],
-                'product year':self.Datas[number]['product year'],
-                'caption':caption,
-                'imageurl':photo
-            }
-            #self.SaveHistory(update.effective_chat.id,Data_to_save)
-            self.Datas.clear()
-            self.Mode = CurrentMode.any
-            context.bot.send_photo(chat_id=update.effective_chat.id, caption=caption, photo=photo , reply_markup=ReplyKeyboardMarkup(self.startbuttons, one_time_keyboard=True))
+            try:
+                number=int(user_input[0])-1
+                caption = self.Datas[number]['caption']
+                photo = self.Datas[number]["imageurl"]
+                Data_to_save={
+                    'title':self.Datas[number]['title'],
+                    'product year':self.Datas[number]['product year'],
+                    'caption':caption,
+                    'imageurl':photo
+                }
+                #self.SaveHistory(update.effective_chat.id,Data_to_save)
+                self.Datas.clear()
+                self.Mode = CurrentMode.any
+                context.bot.send_photo(chat_id=update.effective_chat.id, caption=caption, photo=photo , reply_markup=ReplyKeyboardMarkup(self.startbuttons, one_time_keyboard=True))
+            except:
+                context.bot.send_message(chat_id=update.effective_chat.id, text="Please select one of the results shown by the keyboard \U0001F605")
+
 
         ## Find Film Information
         elif self.Mode==CurrentMode.search:
